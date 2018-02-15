@@ -1,8 +1,8 @@
 from json import *
 from flask import Flask, render_template, jsonify, request
-from sensor.flowSensor import FlowSensor
+from main import Main
 
-fs = FlowSensor()
+main = Main()
 app = Flask(__name__)
 
 @app.route('/')
