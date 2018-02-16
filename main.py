@@ -4,22 +4,29 @@ import logging
 from enum import IntEnum
 logger = logging.getLogger(__name__)
 
-FIRST_TAP  = (1, 4) #First value is tap position. Second value is GPIO of sensors
-SECOND_TAP = (2, 0) #CHANGE THIS VALUES
-THIRD_TAP  = (3, 0)
-FOURTH_TAP = (4, 0)
-FIFTH_TAP  = (5, 0)
-POS = 0
-GPIO = 1
+#TAP N 1   2   3   4   5
+GPIO = [4, 17, 27, 22, 18] #Configure GPIO from sensors. The position of the array is the tap id, and the value is the GPIO
 
-getLitersFromDB = [0,0,0,0,0]
 class Main(object):
 	def __init__(self):
 		self.db = Database()
-		self.initFlowSensors()
+		self.tapControl = [None]
+		for tapId in range(1, 5):
+			liters, label = self.db.getTapInfo(tapId)
+			flowSensor = FlowSensor(tapId, GPIO[tapId], liters, label)
+			self.tapControl.append(flowSensor)
 
-		tapControl =   [None, FlowSensor(FIRST_TAP[POS], FIRST_TAP[GPIO], getLitersFromDB[FIRST_TAP[POS]]),
-						FlowSensor(SECOND_TAP[POS], SECOND_TAP[GPIO], getLitersFromDB[SECOND_TAP[POS]]),
-						FlowSensor(THIRD_TAP[POS], THIRD_TAP[GPIO], getLitersFromDB[THIRD_TAP[POS]]),
-						FlowSensor(FOURTH_TAP[POS], FOURTH_TAP[GPIO], getLitersFromDB[FOURTH_TAP[POS]]),
-						FlowSensor(FIFTH_TAP[POS], FIFTH_TAP[GPIO], getLitersFromDB[FIFTH_TAP[POS]])]
+	def getTapInfo(self, tapId):
+		label = self.tapControl(tapId).getLabel()
+		liters = self.tapControl(tapId).getLiters()
+		return label, liters
+
+	def getAllTaps(self):
+		tapsInfo = {}
+		for tapId in range(1, 5): #TODO Replace 5 for some constant or tapControl
+			label, liters = self.getTapInfo(tapId)
+			tapsInfo[tapId] = {}
+			tapsInfo[tapId]["label"] = label
+			tapsInfo[tapId]["liters"] = liters
+
+		return tapsInfo

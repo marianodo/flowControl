@@ -24,6 +24,10 @@ def stopCounter():
 def getPulse():
     return jsonify(fs.getPulse())
 
+@app.route('/liters')
+def getLiters():
+    return jsonify(main.getAllTaps())
+
 if __name__ == '__main__':
 
     app.run(debug=True, host='0.0.0.0', port=1122)
