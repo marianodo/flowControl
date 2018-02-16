@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Flow Counter</title>
+        <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='style.css') }}">
+
+</head>
+
+<body class="body">
+<div>
+<p id="pulse"></p>
+<button id="startScanningButton" >Start</button>
+<button id="stopScanningButton" >Stop and clear</button>
+    </div>
+
+
+<script>
+
+  function getPulseFromServer(){
+      fetch('pulse').then(function(response) {
+        if (response.ok) {
+            return response.json();
+        }
+      }).then(function(json){
+
+        document.getElementById("pulse").innerHTML =json + " Litros";
+
+      });
+  }
+
+  function startPulseFromServer(){
+      fetch('start').then(function(response) {
+        if (response.ok) {
+            return response.json();
+        }
+      }).then(function(json){
+
+      });
+  }
+
+  function stopPulseFromServer(){
+      fetch('stop').then(function(response) {
+        if (response.ok) {
+            return response.json();
+        }
+      }).then(function(json){
+
+      });
+  }
+
+
+  var stopBtn = document.getElementById("stopScanningButton");
+  var intervalId;
+  var startBtn = document.getElementById("startScanningButton");
+  startBtn.addEventListener('click',function() {
+      console.log('Scanning started');
+      startPulseFromServer();
+      startBtn.disabled = true;
+      stopBtn.disabled = false;
+      intervalId = setInterval(getPulseFromServer,1000);
+  },false);
+
+
+  stopBtn.addEventListener('click',function() {
+      console.log('Scanning stopped');
+      stopPulseFromServer();
+      clearInterval(intervalId);
+      startBtn.disabled = false;
+      stopBtn.disabled = true;
+      // resetUI();
+  },false);
+
+</script>
+</body>
+</html>

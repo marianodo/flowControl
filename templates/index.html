@@ -1,76 +1,32 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Flow Counter</title>
-        <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='style.css') }}">
-
-</head>
-
-<body class="body">
-<div>
-<p id="pulse"></p>
-<button id="startScanningButton" >Start</button>
-<button id="stopScanningButton" >Stop and clear</button>
-    </div>
-
-
-<script>
-
-  function getPulseFromServer(){
-      fetch('pulse').then(function(response) {
-        if (response.ok) {
-            return response.json();
-        }
-      }).then(function(json){
-
-        document.getElementById("pulse").innerHTML =json + " Litros";
-
-      });
-  }
-
-  function startPulseFromServer(){
-      fetch('start').then(function(response) {
-        if (response.ok) {
-            return response.json();
-        }
-      }).then(function(json){
-
-      });
-  }
-
-  function stopPulseFromServer(){
-      fetch('stop').then(function(response) {
-        if (response.ok) {
-            return response.json();
-        }
-      }).then(function(json){
-
-      });
-  }
-
-
-  var stopBtn = document.getElementById("stopScanningButton");
-  var intervalId;
-  var startBtn = document.getElementById("startScanningButton");
-  startBtn.addEventListener('click',function() {
-      console.log('Scanning started');
-      startPulseFromServer();
-      startBtn.disabled = true;
-      stopBtn.disabled = false;
-      intervalId = setInterval(getPulseFromServer,1000);
-  },false);
-
-
-  stopBtn.addEventListener('click',function() {
-      console.log('Scanning stopped');
-      stopPulseFromServer();
-      clearInterval(intervalId);
-      startBtn.disabled = false;
-      stopBtn.disabled = true;
-      // resetUI();
-  },false);
-
-</script>
-</body>
-</html>
+<!DOCTYPE HTML>
+<html>                                                                           
+<head>                                                                           
+    <title>Flask/Gevent WebSocket Test</title>                                                   
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.4.2.min.js"></script>
+    <script type="text/javascript" charset="utf-8">                              
+        $(document).ready(function(){
+    var socket = io.connect('http://' + document.domain + ':' + location.port + '/test');
+    socket.on('my response', function(msg) {
+        $('#log').append('<p>Received: ' + msg.data + '</p>');
+    });
+    $('form#emit').submit(function(event) {
+        socket.emit('my event', {data: $('#emit_data').val()});
+        return false;
+    });
+    $('form#broadcast').submit(function(event) {
+        socket.emit('my broadcast event', {data: $('#broadcast_data').val()});
+        return false;
+    });
+});                                                                
+    </script>                                                                    
+</head>                                                                          
+<body>                                                                           
+    <h1>Send:</h1>                                                               
+    <form method='POST' action='#'>                                              
+        <textarea name='data' id="data"></textarea>                              
+        <div><input type='submit'></div>                                         
+    </form>                                                                      
+    <h1>Receive:</h1>                                                            
+    <div id="log"></div>                                                         
+</body>                                                                          
+</html>               
