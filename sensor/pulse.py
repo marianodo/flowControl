@@ -3,7 +3,7 @@ import RPi.GPIO as GPIO
 import sys
 GPIO.setmode(GPIO.BCM)
 PIN = 4
-GPIO.setup(PIN, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+GPIO.setup(PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
 contador = 0
 
@@ -19,7 +19,7 @@ def my_callback(channel):
         sys.stdout.write('\b')
         i = i+1;
 
-GPIO.add_event_detect(PIN, GPIO.RISING, callback=my_callback)
+GPIO.add_event_detect(PIN, GPIO.FALLING, callback=my_callback)
 
 raw_input("Press Enter Para salir del programa \n")
 GPIO.cleanup()

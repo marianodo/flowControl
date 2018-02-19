@@ -11,10 +11,12 @@ class FlowSensor(object):
 
     def configureGpioSensors(self):
         GPIO.setmode(GPIO.BCM)
-        GPIO.setup(self.gpio, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-        GPIO.add_event_detect(self.gpio, GPIO.RISING, callback=self.incrementPulse)
+        GPIO.setup(self.gpio, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+        GPIO.add_event_detect(self.gpio, GPIO.FALLING, callback=self.incrementPulse)
 
-    def incrementPulse(self):
+    def incrementPulse(self, channel):
+        print "INCREMENT PULSE FROM " + str(self.tapPosition)
+        print "CHANNEL" + str(channel)
         self.pulse += 1
         self.getLiterAmountFromPulse()
 
