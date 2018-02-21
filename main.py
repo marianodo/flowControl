@@ -2,32 +2,64 @@ from sensor.flowSensor import FlowSensor
 from storage.db import Database
 import logging
 from enum import IntEnum
+from threading import Thread, Event
+import time
 logger = logging.getLogger(__name__)
 
+thread_stop_event = Event()
+threads = list()
+START_TAP = 1
+MAX_TAP_AMOUNT = 5
 #TAP N 1   2   3   4   5
 GPIO = [0, 4, 17, 27, 22, 18] #Configure GPIO from sensors. The position of the array is the tap id, and the value is the GPIO
-
 class Main(Thread):
-	def __init__(self):
+	def __init__(self, socketio):
+		self.socketio = socketio
+		self.delay = 1
 		self.db = Database()
 		self.tapControl = [None]
-		for tapId in range(1, 6):
+		self.timeToStorage = 0
+		for tapId in range(START_TAP, MAX_TAP_AMOUNT + 1):
 			liters, label = self.db.getTapInfo(tapId)
 			flowSensor = FlowSensor(tapId, GPIO[tapId], liters, label)
 			self.tapControl.append(flowSensor)
-		super(RandomThread, self).__init__()
+
+		# threadStorage = Thread(target=self.storageData)
+		# threads.append(threadStorage)
+		# threadStorage.start()
+		super(Main, self).__init__()
 
 	def getTapInfo(self, tapId):
 		label = self.tapControl[tapId].getLabel()
 		liters = self.tapControl[tapId].getLiters()
 		return label, liters
+    
+	def startMeasuring(self):
+		while not thread_stop_event.isSet():
+			tapsInfo = {}
+			for tapId in range(START_TAP, MAX_TAP_AMOUNT + 1): 
+				label, liters = self.getTapInfo(tapId)
+				tapsInfo[tapId] = {}
+				tapsInfo[tapId]["label"] = label
+				tapsInfo[tapId]["liters"] = liters
 
-	def getAllTaps(self):
-		tapsInfo = {}
-		for tapId in range(1, 6): #TODO Replace 5 for some constant or tapControl
-			label, liters = self.getTapInfo(tapId)
-			tapsInfo[tapId] = {}
-			tapsInfo[tapId]["label"] = label
-			tapsInfo[tapId]["liters"] = liters
+				if self.timeToStorage == 10:
+					self.db.updateTapLiters(tapId, liters)
+					
+			if self.timeToStorage == 10:
+				self.timeToStorage = 0
+			self.socketio.emit('tapFlow', {'taps': tapsInfo}, namespace='/test')
+			self.socketio.sleep(self.delay)
+			self.timeToStorage += 1
 
-		return tapsInfo
+	def storageData(self):
+		while True:
+			for tapId in range(START_TAP, MAX_TAP_AMOUNT + 1): 
+				_, liters = self.getTapInfo(tapId)
+				
+			time.sleep(10)
+
+
+
+	def run(self):
+		self.startMeasuring()

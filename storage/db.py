@@ -21,7 +21,9 @@ class Database(object):
 		return liters, label
 
 	def updateTapLiters(self,tapNumber, liters):
-		qry = UPDATE_TAP.format(tapNumber, liters)
+		
+		qry = UPDATE_TAP_LITERS.format(tapNumber, liters)
+		print qry
 		self.cursor.execute(qry)
 		self.connetion.commit()
 

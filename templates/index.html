@@ -4,24 +4,53 @@
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.4.6/socket.io.js"></script>
     <script src="static/js/application.js"></script>
-
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+
+    <style>
+table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+td, th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+}
+
+tr:nth-child(even) {
+    background-color: #dddddd;
+}
+</style>
 </head>
 <body>
-<div class="jumbotron">
-    <h1>Asynchronous Flask Communication</h1>
-</div>
-
-<div class="container" id="content">
-    <div class="row">
-        <p>Asynchronous page updates will appear here:</p>
-        <h3>Number list:</h3>
-        <div id="log">
-    </div>
-</div>
-
-
-</div>
+<table>
+  <tr>
+    <th>Número de Canilla</th>
+    <th>Litros</th>
+  </tr>
+  <tr>
+    <td>1</td>
+    <td id="tap1">0</td>
+  </tr>
+  <tr>
+    <td>2</td>
+    <td id="tap2">0</td>
+  </tr>
+  <tr>
+    <td>3</td>
+    <td id="tap3">0</td>
+  </tr>
+  <tr>
+    <td>4</td>
+    <td id="tap4">0</td>
+  </tr>
+  <tr>
+    <td>5</td>
+    <td id="tap5">0</td>
+  </tr>
+</table>
 
 </body>
 </html>
