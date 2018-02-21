@@ -19,7 +19,8 @@ class FlowSensor(object):
         self.getLiterAmountFromPulse()
 
     def getLiterAmountFromPulse(self):
-        self.liters = self.pulse #Put algorithm to calculate liters from pulse
+        self.liters += self.pulse #Put algorithm to calculate liters from pulse
+        self.pulse = 0
 
     def getLiters(self):
         return self.liters

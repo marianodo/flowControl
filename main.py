@@ -24,9 +24,6 @@ class Main(Thread):
 			flowSensor = FlowSensor(tapId, GPIO[tapId], liters, label)
 			self.tapControl.append(flowSensor)
 
-		# threadStorage = Thread(target=self.storageData)
-		# threads.append(threadStorage)
-		# threadStorage.start()
 		super(Main, self).__init__()
 
 	def getTapInfo(self, tapId):
