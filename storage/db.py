@@ -40,6 +40,11 @@ class Database(object):
 
 		self.connection.commit()
 
+	def resetTap(self, tapNumber):
+		qry = UPDATE_TAP_LITERS.format(0, tapNumber)
+		self.cursor.execute(qry)
+		self.connection.commit()
+
 	def __enter__(self):
 		return self
 

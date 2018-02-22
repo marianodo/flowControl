@@ -23,6 +23,55 @@ tr:nth-child(even) {
     background-color: #dddddd;
 }
 </style>
+
+ <script type="text/javascript">
+  
+  $(document).ready(function(){
+    //connect to the socket server.
+    var socket = io.connect('http://' + document.domain + ':' + location.port + '/test');
+    var numbers_received = [];
+
+    //receive details from server
+    socket.on('tapFlow', function(msg) {
+       document.getElementById("tap1").innerHTML =msg["taps"][1].liters;
+       document.getElementById("tap2").innerHTML =msg["taps"][2].liters;
+       document.getElementById("tap3").innerHTML =msg["taps"][3].liters;
+       document.getElementById("tap4").innerHTML =msg["taps"][4].liters;
+       document.getElementById("tap5").innerHTML =msg["taps"][5].liters;
+    });
+
+    $('form#tap1').submit(function(event) {
+            socket.emit('resetTap', {data: 1});
+            return false;
+        });
+
+    $('form#tap2').submit(function(event) {
+        socket.emit('resetTap', {data: 2});
+        return false;
+    });
+
+    $('form#tap3').submit(function(event) {
+        socket.emit('resetTap', {data: 3});
+        return false;
+    });
+
+     $('form#tap4').submit(function(event) {
+        socket.emit('resetTap', {data: 4});
+        return false;
+    });
+
+       $('form#tap5').submit(function(event) {
+        socket.emit('resetTap', {data: 5});
+        return false;
+    });
+
+   
+});
+
+  function resetTap(tapId) {
+  socket.send('resetTap', {data: $('#button1').val()});
+}
+</script> 
 </head>
 <body>
 <table>
@@ -33,22 +82,48 @@ tr:nth-child(even) {
   <tr>
     <td>1</td>
     <td id="tap1">0</td>
+
+    <td>
+      <form id="tap1" method="POST" action='#'>
+          <button value=1>Reiniciar</button>
+      </form>
+    </td>
   </tr>
   <tr>
     <td>2</td>
     <td id="tap2">0</td>
+    <td>
+      <form id="tap2" method="POST" action='#'>
+          <button value=2>Reiniciar</button>
+      </form>
+    </td>
   </tr>
   <tr>
     <td>3</td>
     <td id="tap3">0</td>
+    <td>
+      <form id="tap3" method="POST" action='#'>
+          <button value=3>Reiniciar</button>
+      </form>
+    </td>
   </tr>
   <tr>
     <td>4</td>
     <td id="tap4">0</td>
+    <td>
+      <form id="tap4" method="POST" action='#'>
+          <button value=4>Reiniciar</button>
+      </form>
+    </td>
   </tr>
   <tr>
     <td>5</td>
     <td id="tap5">0</td>
+    <td>
+      <form id="tap5" method="POST" action='#'>
+          <button value=5>Reiniciar</button>
+      </form>
+    </td>
   </tr>
 </table>
 

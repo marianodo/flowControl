@@ -37,6 +37,10 @@ def test_connect():
 def test_disconnect():
     print('Client disconnected')
 
+# @socketio.on('resetTap', namespace='/test')
+# def test_disconnect(msg):
+# 	print('Client disconnected')
+
 
 if __name__ == '__main__':
     socketio.run(app, host='0.0.0.0', port=1122)

@@ -15,6 +15,10 @@ GPIO = [0, 4, 17, 27, 22, 18] #Configure GPIO from sensors. The position of the 
 class Main(Thread):
 	def __init__(self, socketio):
 		self.socketio = socketio
+		
+		
+		self.listenSockets(socketio)
+
 		self.delay = 1
 		self.db = Database()
 		self.tapControl = [None]
@@ -56,6 +60,12 @@ class Main(Thread):
 				
 			time.sleep(10)
 
+	
+	def listenSockets(self, socketio):
+		@socketio.on('resetTap', namespace='/test')
+		def test_disconnect(msg):
+			self.db.resetTap(msg["data"])
+			self.tapControl[msg["data"]].clearPulse()
 
 
 	def run(self):

@@ -33,6 +33,7 @@ class FlowSensor(object):
 
     def clearPulse(self):
         self.pulse = 0
+        self.liters = 0
 
     def __del__(self):
         GPIO.cleanup()       

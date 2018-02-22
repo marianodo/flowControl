@@ -12,4 +12,9 @@ $(document).ready(function(){
        document.getElementById("tap5").innerHTML =msg["taps"][5].liters;
     });
 
+   function resetTap(tapId) {
+  socket.send('resetTap', {data: tapId});
+}
 });
+
+
