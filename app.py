@@ -26,20 +26,16 @@ def index():
     #only by sending this page first will the client be connected to the socketio instance
     return render_template('index.html')
 
-@socketio.on('connect', namespace='/test')
+@socketio.on('connect', namespace='/flowMeter')
 def test_connect():
     global thread
     if not thread.isAlive():
         thread = Main(socketio)
         thread.start()
 
-@socketio.on('disconnect', namespace='/test')
+@socketio.on('disconnect', namespace='/flowMeter')
 def test_disconnect():
     print('Client disconnected')
-
-# @socketio.on('resetTap', namespace='/test')
-# def test_disconnect(msg):
-# 	print('Client disconnected')
 
 
 if __name__ == '__main__':
